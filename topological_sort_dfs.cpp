@@ -1,42 +1,41 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-void dfs(vector<vector<int>> &adj, vector<bool>&vis, stack<int>&st, int node)
-{
-	vis[node] = true;
-	for (auto nbr : adj[node])
-	{
-		if (!vis[nbr])
-			dfs(adj, vis, st, nbr);
-	}
-	st.push(node);
+void dfs(unordered_map<int, vector<int>> &adj, unordered_map<int, bool> &vis, stack<int> &st, int node) {
+    vis[node] = true;
+    for (auto nbr : adj[node]) {
+        if (!vis[nbr]) {
+            dfs(adj, vis, st, nbr);
+        }
+    }
+    st.push(node);  // Add node to stack after all its neighbors are processed
 }
-int main()
-{
-	int n, m;
-	cin >> n >> m;
 
-	vector<vector<int>> adj(n + 1);
+int main() {
+    int n, m,a,b;
+    cin >> n >> m;
 
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
-		cin >> a >> b;
-		adj[a].push_back(b);
-	}
-	vector<bool>vis(n + 1, false);
+    unordered_map<int, vector<int>> adj;  // Adjacency list using unordered_map and vector
 
-	stack<int> st;
-	for (int i = 0; i < n; i++)
-	{
-		if (vis[i] == false)
-			dfs(adj, vis, st, i);
-	}
+    for (int i = 0; i < m; i++) {
+        cin >> a >> b;
+        adj[a].push_back(b);  // Directed edge from a to b
+    }
 
-	while (!st.empty())
-	{
-		cout << st.top() << " ";
-		st.pop();
-	}
-	return 0;
+    unordered_map<int, bool> vis;  // Visited map
+
+    stack<int> st;
+    for (auto x:adj) {
+        if (!vis[x.first]) {
+            dfs(adj, vis, st, x.first);
+        }
+    }
+
+    while (!st.empty()) {
+        cout << st.top() << " ";
+        st.pop();
+    }
+    cout << endl;
+
+    return 0;
 }
