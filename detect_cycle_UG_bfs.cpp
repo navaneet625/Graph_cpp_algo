@@ -1,27 +1,22 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool bfs(vector<vector<int>>&adj, vector<bool>&vis, int src, int n)
-{
-	vis[src] = true;
-	vector<int>parent(n, -1);
+bool bfs(unordered_map<int,vector<int>>&adj,unordered_set<int>&vis ,int src){
+	vis.insert(src);
+	unordered_map<int,int>parent;
 	queue<int> Q;
 	Q.push(src);
 	bool flag = false;
-	while (!Q.empty())
-	{
+	while (!Q.empty()){
 		int node = Q.front();
 		Q.pop();
-		for (auto x : adj[node])
-		{
-			if (!vis[x])
-			{
-				vis[x] = true;
+		for (auto x : adj[node]){
+			if (vis.find(x)==vis.end()){
+				vis.insert(x);
 				Q.push(x);
 				parent[x] = node;
 			}
-			else if (x != parent[u])
-			{
+			else if (x != parent[node]){
 				flag = true;
 				break;
 			}
@@ -30,28 +25,20 @@ bool bfs(vector<vector<int>>&adj, vector<bool>&vis, int src, int n)
 	return flag;
 }
 
-int main()
-{
-	int n, m;
+int main(){
+	int n, m,a,b;
 	cin >> n >> m;
-
-	vector<vector<int>> adj(n);
-
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
+	unordered_map<int,vector<int>>adj;
+	for (int i = 0; i < m; i++){
 		cin >> a >> b;
 		adj[a].push_back(b);
 		adj[b].push_back(a);
 	}
-	vector<bool>vis(n, false);
-
+	unordered_set<int>vis;
 	bool flag = false;
 
-	for (int i = 0; i < n; i++)
-	{
-		if (!vis[i] && bfs(adj, vis, i, n))
-		{
+	for (auto x:adj){
+		if (vis.find(x.first)==vis.end() && bfs(adj, vis, i)){
 			flag = true;
 			break;
 		}
