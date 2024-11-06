@@ -1,46 +1,46 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main()
-{
-	int n, m;
-	cin >> n >> m;
-	vector<vector<int>> adj(n);
+int main() {
+    int n, m,a,b;
+    cin >> n >> m;
+    unordered_map<int, vector<int>> adj;  // Adjacency list using unordered_map and vector
 
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
-		cin >> a >> b;
-		adj[a].push_back(b);
-	}
+    for (int i = 0; i < m; i++) {
+        cin >> a >> b;
+        adj[a].push_back(b);  // Add directed edge from node a to node b
+    }
 
-	vector<int>indegree(n, 0);
+    unordered_map<int, int> indegree;  // In-degree map
 
-	for (int i = 0; i < n; i++)
-	{
-		for (auto x : adj[i])
-			indegree[x]++;
-	}
+    // Calculate in-degrees of all nodes
+    for (const auto& node : adj) {
+        for (int neighbor : node.second) {
+            indegree[neighbor]++;
+        }
+    }
 
-	queue<int> Q;
-	for (int i = 0; i < n; i++)
-	{
-		if (indegree[i] == 0)
-			Q.push(i);
-	}
+    queue<int> Q;
+    // Initialize queue with nodes having in-degree 0
+    for (int i = 0; i < n; i++) {
+        if (indegree[i] == 0) {
+            Q.push(i);
+        }
+    }
 
-	while (!Q.empty())
-	{
-		int node = Q.front();
-		cout << node << " ";
-		Q.pop();
+    // Perform topological sort
+    while (!Q.empty()) {
+        int node = Q.front();
+        cout << node << " ";
+        Q.pop();
 
-		for (auto x : adj[node])
-		{
-			indegree[x]--;
-			if (indegree[x] == 0)
-				Q.push(x);
-		}
-	}
-	cout << endl;
+        for (auto x : adj[node]) {
+            indegree[x]--;
+            if (indegree[x] == 0) {
+                Q.push(x);
+            }
+        }
+    }
+    cout << endl;
+    return 0;
 }
