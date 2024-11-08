@@ -1,42 +1,41 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-int dfs(vector<vector<int>>&adj, vector<int>&vis, int node, int parent, int color)
-{
-	vis[node] = color;
-	for (auto nbr : adj[node])
-	{
-		if (vis[nbr] == 0)
-		{
-			if (!dfs(adj, vis, nbr, node, 3 - color))
-				return false;
-		}
-		else if (nbr != parent && color == vis[nbr])
-			return false;
-	}
-	return true;
+bool dfs(unordered_map<int, vector<int>>& adj, unordered_map<int, int>& vis, int node, int color) {
+    vis[node] = color;
+    for (auto nbr : adj[node]) {
+        if (vis.find(nbr) == vis.end()) {  // If the neighbor is unvisited
+            if (!dfs(adj, vis, nbr, 3 - color))  // Alternate color
+                return false;
+        } else if (color == vis[nbr]) {  // Check for the same color in neighbors
+            return false;
+        }
+    }
+    return true;
 }
 
-int main()
-{
-	int n, m;
-	cin >> n >> m;
+int main() {
+    int n, m, a, b;
+    cin >> n >> m;
+    unordered_map<int, vector<int>> adj;  // Graph using unordered_map
 
-	vector<vector<int>> adj(n + 1);
+    for (int i = 0; i < m; i++) {
+        cin >> a >> b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
 
-	for (int i = 0; i < m; i++)
-	{
-		int a, b;
-		cin >> a >> b;
+    unordered_map<int, int> vis;  // Visited map with colors
+    bool isBipartite = true;
+    for (auto& node : adj) {  // Iterate over all nodes in the adjacency map
+        if (vis.find(node.first) == vis.end()) {  // If the node is unvisited
+            if (!dfs(adj, vis, node.first, 1)) {
+                isBipartite = false;
+                break;
+            }
+        }
+    }
 
-		adj[a].push_back(b);
-		adj[b].push_back(a);
-	}
-	vector<int> vis(n + 1, 0);
-
-	int parent = -1, color = 1, src = 0;
-	if (dfs(adj, vis, src, parent, color))
-		cout << "Yes " << endl;
-	else
-		cout << "No " << endl;
+    isBipartite?cout << "Yes\n ":cout << "No\n" << endl;
+    return 0;
 }
